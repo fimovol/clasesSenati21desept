@@ -1,7 +1,9 @@
 package com.example.el_24deseptiembre;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         btRegistrar = findViewById(R.id.button);
         btVerdatos = findViewById(R.id.button2);
-
-
+        ViweData();
+        AddData();
     }
     public void AddData(){
         btRegistrar.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +49,34 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG
                     ).show();
                 }
+            }
+        });
+    }
+    public void showMesage(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+    public void ViweData(){
+        btVerdatos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor res = mydb.getAllData();
+                if(res.getCount() == 0){
+                    showMesage("error","nada que ver aqui");
+                    return;
+                }
+                StringBuffer bufer = new StringBuffer();
+
+                while(res.moveToNext()){
+                    bufer.append("ID"+res.getString(0)+"\n");
+                    bufer.append("Nombre"+res.getString(1)+"\n");
+                    bufer.append("Apellido"+res.getString(2)+"\n");
+                    bufer.append("Correo"+res.getString(3)+"\n");
+                }
+                showMesage("Data",bufer.toString());
             }
         });
     }
